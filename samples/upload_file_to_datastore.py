@@ -12,7 +12,7 @@ from tools import cli, service_instance
 
 def main():
     parser = cli.Parser()
-    parser.add_required_arguments(cli.Argument.DATASTORE_NAME)
+    parser.add_required_arguments(cli.Argument.DATASTORE_NAME, cli.Argument.DATACENTER_NAME)
     parser.add_optional_arguments(cli.Argument.LOCAL_FILE_PATH, cli.Argument.REMOTE_FILE_PATH)
     args = parser.get_args()
 
@@ -44,6 +44,8 @@ def main():
                 dc_obj,
                 [vim.Datastore],
                 True)
+            if dc_obj.name != args.datacenter_name:
+                continue
             for ds_obj in datastores_object_view.view:
                 if ds_obj.info.name == args.datastore_name:
                     datacenter = dc_obj
@@ -78,6 +80,8 @@ def main():
         # Make a cookie
         cookie = dict()
         cookie[cookie_name] = cookie_text
+
+        print(cookie)
 
         # Get the request headers set up
         headers = {'Content-Type': 'application/octet-stream'}
